@@ -1,0 +1,11 @@
+node_modules/
+
+# Playwright output
+playwright-report/
+test-results/
+blob-report/
+
+# Saved login sessions (storageState) - never commit these
+playwright/.auth/
+
+.env
