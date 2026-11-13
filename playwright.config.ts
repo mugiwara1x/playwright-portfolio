@@ -41,8 +41,16 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      // API specs belong to the 'api' project below.
+      testIgnore: /tests[\\/]api[\\/]/,
       // Playwright runs 'setup' first; if it fails, these tests are skipped instead of all failing.
       dependencies: ['setup'],
+    },
+    // Pure HTTP tests: no browser is launched, and no dependency on the saucedemo login.
+    {
+      name: 'api',
+      testDir: './tests/api',
+      use: { extraHTTPHeaders: { Accept: 'application/json' } },
     },
   ],
 });
