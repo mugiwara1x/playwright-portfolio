@@ -1,26 +1,22 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../src/pages/LoginPage';
-import { InventoryPage } from '../../src/pages/InventoryPage';
+// Logged-out tests: they import the base fixtures, so every test starts with no session.
+import { test, expect } from '../../src/fixtures/test';
 import { users, invalidLogins } from '../../src/data/users';
 
 test.describe('Login', () => {
-  let loginPage: LoginPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
+  test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
   });
 
-  test('standard user can log in and sees the products page', async ({ page }) => {
+  test('standard user can log in and sees the products page', async ({ page, loginPage, inventoryPage }) => {
     await loginPage.login(users.standard);
 
     await expect(page).toHaveURL(/\/inventory\.html$/);
-    await expect(new InventoryPage(page).title).toHaveText('Products');
+    await expect(inventoryPage.title).toHaveText('Products');
   });
 
   // Data-driven: one generated test per row in `invalidLogins` (src/data/users.ts).
   for (const { scenario, user, error } of invalidLogins) {
-    test(`shows an error for ${scenario}`, async ({ page }) => {
+    test(`shows an error for ${scenario}`, async ({ page, loginPage }) => {
       await loginPage.login(user);
 
       await expect(loginPage.errorMessage).toHaveText(error);
@@ -28,7 +24,7 @@ test.describe('Login', () => {
     });
   }
 
-  test('blocks direct access to the inventory without a session', async ({ page }) => {
+  test('blocks direct access to the inventory without a session', async ({ page, loginPage }) => {
     await page.goto('/inventory.html');
 
     await expect(loginPage.errorMessage).toHaveText(
@@ -36,9 +32,9 @@ test.describe('Login', () => {
     );
   });
 
-  test('logging out ends the session', async ({ page }) => {
+  test('logging out ends the session', async ({ page, loginPage, inventoryPage }) => {
     await loginPage.login(users.standard);
-    await new InventoryPage(page).header.logout();
+    await inventoryPage.header.logout();
 
     await expect(loginPage.loginButton).toBeVisible();
 

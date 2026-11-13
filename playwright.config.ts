@@ -33,9 +33,16 @@ export default defineConfig({
   },
 
   projects: [
+    // Logs in once and saves the session to playwright/.auth/ (see tests/auth.setup.ts).
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      // Playwright runs 'setup' first; if it fails, these tests are skipped instead of all failing.
+      dependencies: ['setup'],
     },
   ],
 });
