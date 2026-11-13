@@ -6,6 +6,7 @@ import { test as base } from './test';
  * The folder is gitignored: a saved session is a credential.
  */
 export const STANDARD_USER_STATE = path.join(__dirname, '../../playwright/.auth/standard-user.json');
+export const PROBLEM_USER_STATE = path.join(__dirname, '../../playwright/.auth/problem-user.json');
 
 /**
  * The same `test` as './test' (all page-object fixtures included), but every browser context
