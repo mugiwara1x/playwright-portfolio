@@ -1,5 +1,7 @@
 # Playwright + TypeScript test automation portfolio
 
+[![Playwright tests](https://github.com/mugiwara1x/playwright-portfolio/actions/workflows/playwright.yml/badge.svg)](https://github.com/mugiwara1x/playwright-portfolio/actions/workflows/playwright.yml)
+
 > **This is a learning and portfolio project.** My production automation experience is with
 > WebdriverIO, Cypress, Cucumber and TypeScript. I built this repository to learn Playwright
 > properly and to show working examples of the patterns it's known for. I have not used
@@ -117,13 +119,15 @@ At this suite size, sharding costs more in setup than it saves. It's included to
 
 ### Visual baselines are per OS
 
-Font rendering differs between Windows and Linux, so a screenshot baseline from a Windows laptop can't be compared on CI's Linux runners. The committed baseline is `*-chromium-win32.png`. To add the Linux one:
+Font rendering differs between Windows and Linux, so a screenshot baseline from a Windows laptop can't be compared on CI's Linux runners. The repo keeps one baseline per OS: `*-chromium-win32.png` (local runs) and `*-chromium-linux.png` (CI).
+
+The Linux baseline was produced on CI itself. To regenerate it (for example after a runner image upgrade or an intended UI change):
 
 1. Run the **Update Linux visual baselines** workflow manually (Actions tab).
 2. Download the `linux-snapshots` artifact and look at the image.
 3. Commit it next to the Windows one, in `tests/ui/visual.spec.ts-snapshots/`.
 
-Until then, the visual test fails on CI. A baseline is never approved automatically.
+A baseline is never approved automatically: a person looks at it first.
 
 ## How this was built
 
