@@ -17,9 +17,24 @@ async function createAndGetId(api: BookingClient, payload: Booking): Promise<num
 }
 
 /**
+ * Read-back step: fetch a booking and return it, validated by the schema.
+ * The status is checked BEFORE parsing, so a missing booking fails as "expected 200, received 404"
+ * instead of a confusing JSON SyntaxError on the "Not Found" text body.
+ */
+async function getStoredBooking(api: BookingClient, id: number): Promise<Booking> {
+  const response = await api.getBooking(id);
+  expect(response.status(), `GET /booking/${id} should find the booking`).toBe(200);
+  return BookingSchema.parse(await response.json());
+}
+
+/**
  * Every test creates its own booking, so tests are independent and can run in parallel.
  * Status codes below are what restful-booker really returns (checked before writing these):
  * it has some well-known quirks, called out where they appear.
+ *
+ * restful-booker is a shared public sandbox: its data is reset periodically and anyone with the
+ * demo credentials can delete bookings. A booking can therefore (rarely) vanish mid-test. CI
+ * retries absorb that; a failure that repeats on retry is a real failure.
  */
 test.describe('Booking API: CRUD', () => {
   test('POST /booking creates a booking and echoes it back', async ({ bookingApi }) => {
@@ -38,10 +53,7 @@ test.describe('Booking API: CRUD', () => {
     const payload = buildBooking({ additionalneeds: 'Late checkout' });
     const bookingid = await createAndGetId(bookingApi, payload);
 
-    const response = await bookingApi.getBooking(bookingid);
-
-    expect(response.status()).toBe(200);
-    expect(BookingSchema.parse(await response.json())).toEqual(payload);
+    expect(await getStoredBooking(bookingApi, bookingid)).toEqual(payload);
   });
 
   test('GET /booking?lastname= finds the booking by name', async ({ bookingApi }) => {
@@ -64,7 +76,7 @@ test.describe('Booking API: CRUD', () => {
     expect(response.status()).toBe(200);
     expect(BookingSchema.parse(await response.json())).toEqual(replacement);
     // Don't trust the echo alone: read it back to prove it was stored.
-    expect(await (await bookingApi.getBooking(bookingid)).json()).toEqual(replacement);
+    expect(await getStoredBooking(bookingApi, bookingid)).toEqual(replacement);
   });
 
   test('PATCH /booking/:id changes only the given fields', async ({ bookingApi }) => {
@@ -102,7 +114,7 @@ test.describe('Booking API: negative cases', () => {
     const response = await guestBookingApi.updateBooking(bookingid, buildBooking({ firstname: 'Hacker' }));
 
     expect(response.status()).toBe(403);
-    expect(await (await bookingApi.getBooking(bookingid)).json()).toEqual(original);
+    expect(await getStoredBooking(bookingApi, bookingid)).toEqual(original);
   });
 
   test('deleting without a token is forbidden', async ({ bookingApi, guestBookingApi }) => {

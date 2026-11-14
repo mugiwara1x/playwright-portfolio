@@ -9,3 +9,6 @@ blob-report/
 playwright/.auth/
 
 .env
+
+# Local copies of CI shard reports (see .github/workflows/playwright.yml)
+all-blob-reports/

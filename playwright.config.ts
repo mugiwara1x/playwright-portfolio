@@ -19,8 +19,10 @@ export default defineConfig({
   // `undefined` = Playwright picks based on CPU cores. On CI we keep it at 2 to be gentle with the public sites.
   workers: isCI ? 2 : undefined,
 
-  // 'list' for readable terminal output, 'html' for the report we'll upload as a CI artifact.
-  reporter: [['list'], ['html', { open: 'never' }]],
+  // Locally: 'list' in the terminal + an 'html' report.
+  // On CI: each shard writes a 'blob' (raw results) that a later job merges into ONE html report;
+  // 'github' turns failures into annotations on the PR's "Files changed" tab.
+  reporter: isCI ? [['blob'], ['github'], ['list']] : [['list'], ['html', { open: 'never' }]],
 
   // Defaults shared by every test (can be overridden per project or per test).
   use: {

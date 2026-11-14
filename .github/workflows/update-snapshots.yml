@@ -1,0 +1,32 @@
+name: Update Linux visual baselines
+
+# Manual only. Visual baselines are per OS (fonts render differently), so the Windows
+# baseline committed from a laptop can't be used on CI's Linux runner. This workflow
+# generates the Linux one ON the same runner type CI uses. A human then downloads it,
+# looks at it, and commits it: a baseline is never approved automatically.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update-snapshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Generate Linux baselines for the visual tests
+        run: npx playwright test tests/ui/visual.spec.ts --update-snapshots
+      - name: Upload new baselines
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-snapshots
+          path: tests/**/*-linux.png
+          retention-days: 7
