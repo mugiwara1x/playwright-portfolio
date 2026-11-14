@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Learning and portfolio project: Playwright + TypeScript against public practice sites.",
   "private": true,
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "scripts": {
     "test": "playwright test",
