@@ -2,7 +2,7 @@
 
 > Generated on 2026-11-14 with Claude Code 2.1.317 in headless mode (`claude -p`), run from an empty folder so it saw ONLY the prompt below, not this repository.
 > Input: [prompt.md](prompt.md) with [acceptance-criteria.md](acceptance-criteria.md) pasted in.
-> The test cases below are kept exactly as generated (this header is the only addition). The review is in [../ai-assisted-testing.md](../ai-assisted-testing.md).
+> The test cases below are kept exactly as generated: this header is the only addition, and line endings are stored as LF by `.gitattributes` (the CLI output used Windows CRLF). The review is in [../ai-assisted-testing.md](../ai-assisted-testing.md).
 
 ---
 
