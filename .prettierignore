@@ -3,3 +3,7 @@ playwright-report/
 test-results/
 blob-report/
 package-lock.json
+
+# AI inputs/outputs are kept byte-for-byte as used and generated
+docs/ai/prompt.md
+docs/ai/raw-output.md

@@ -3,11 +3,13 @@ import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
 import { CheckoutPage } from '../pages/CheckoutPage';
+import { ProductDetailsPage } from '../pages/ProductDetailsPage';
 
 // The fixtures this file adds, by name and type. Tests get them typed and autocompleted.
 type PageObjects = {
   loginPage: LoginPage;
   inventoryPage: InventoryPage;
+  productDetailsPage: ProductDetailsPage;
   cartPage: CartPage;
   checkoutPage: CheckoutPage;
 };
@@ -27,6 +29,9 @@ export const test = base.extend<PageObjects>({
   },
   inventoryPage: async ({ page }, use) => {
     await use(new InventoryPage(page));
+  },
+  productDetailsPage: async ({ page }, use) => {
+    await use(new ProductDetailsPage(page));
   },
   cartPage: async ({ page }, use) => {
     await use(new CartPage(page));

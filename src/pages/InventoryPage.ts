@@ -32,6 +32,23 @@ export class InventoryPage {
     return this.items.filter({ has: this.page.getByText(productName, { exact: true }) });
   }
 
+  /** The product's picture in the list (its alt text is the product name). */
+  productImage(productName: string): Locator {
+    return this.productCard(productName).getByRole('img', { name: productName });
+  }
+
+  /** Opens a product's details page by clicking either its name or its image. */
+  async openDetails(productName: string, via: 'name' | 'image'): Promise<void> {
+    const card = this.productCard(productName);
+    const link = via === 'name' ? card.getByTestId(/-title-link$/) : card.getByTestId(/-img-link$/);
+    await link.click();
+    // The details page reuses the list's data-test ids (e.g. inventory-item-name), so the next locator
+    // could still see the 6 list items and fail strict mode. Waiting for the URL is NOT enough: this is
+    // a single-page app, and it changes the URL before it renders the new page. So we wait for an
+    // element that only exists on the details page. The action is "done" once the user sees that page.
+    await this.page.getByTestId('back-to-products').waitFor();
+  }
+
   async addToCart(productName: string): Promise<void> {
     await this.productCard(productName).getByRole('button', { name: 'Add to cart' }).click();
   }
