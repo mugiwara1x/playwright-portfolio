@@ -1,6 +1,6 @@
 # Playwright + TypeScript test automation portfolio
 
-[![Playwright tests](https://github.com/mugiwara1x/playwright-portfolio/actions/workflows/playwright.yml/badge.svg)](https://github.com/mugiwara1x/playwright-portfolio/actions/workflows/playwright.yml)
+[![Playwright tests](https://github.com/pablo-viana-qa/playwright-portfolio/actions/workflows/playwright.yml/badge.svg)](https://github.com/pablo-viana-qa/playwright-portfolio/actions/workflows/playwright.yml)
 
 > **This is a learning and portfolio project.** My production automation experience is with
 > WebdriverIO, Cypress, Cucumber and TypeScript. I built this repository to learn Playwright
